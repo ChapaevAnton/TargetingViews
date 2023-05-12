@@ -13,8 +13,8 @@ import kotlin.math.*
 
 class InclinePlatformView @JvmOverloads constructor(
     context: Context,
-    attributeSet: AttributeSet? = null
-) : View(context, attributeSet) {
+    attrs: AttributeSet? = null
+) : View(context, attrs) {
 
     private val pxViewSize = 200
     private val pxStrokeWidth = 3F
@@ -66,11 +66,45 @@ class InclinePlatformView @JvmOverloads constructor(
     private var iconRes: Int = R.drawable.base_icon
     private var gradientMode = GradientMode.FRONT
     private var scaleMode = ScaleMode.NONE
-    private lateinit var iconBitmap: Bitmap
+    private var iconBitmap: Bitmap? = null
     private var isInverted = false
     private var isNightMode = false
     private var degreeText = "0,0º"
     private var degree = 0F
+
+    init {
+        if (attrs != null) {
+            val attrArray = context.obtainStyledAttributes(attrs, R.styleable.InclinePlatformView)
+            try {
+                val gradientMode = attrArray.getInt(
+                    R.styleable.InclinePlatformView_gradient_mode,
+                    GradientMode.FRONT.ordinal
+                ).let { GradientMode.values()[it] }
+
+                val scaleMode = attrArray.getInt(
+                    R.styleable.InclinePlatformView_scale_mode,
+                    ScaleMode.NONE.ordinal
+                ).let { ScaleMode.values()[it] }
+
+                val inverted = attrArray.getBoolean(R.styleable.InclinePlatformView_inverted, false)
+
+                val iconRes = attrArray.getResourceId(
+                    R.styleable.InclinePlatformView_icon,
+                    R.drawable.base_icon
+                )
+
+                val degree = attrArray.getFloat(R.styleable.InclinePlatformView_angle, 0F).toDouble()
+
+                setGradientMode(gradientMode)
+                setScaleMode(scaleMode)
+                isInverted(inverted)
+                setIcon(iconRes)
+                setAngle(degree)
+            } finally {
+                attrArray.recycle()
+            }
+        }
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthExpect = paddingLeft + paddingRight + pxViewSize
@@ -95,10 +129,7 @@ class InclinePlatformView @JvmOverloads constructor(
 
         pxCanvasRadius = pxCanvasCenter - strokePaint.strokeWidth
 
-        centerPoint.set(
-            pxCanvasCenter + pxCanvasPadding,
-            pxCanvasCenter + pxCanvasPadding
-        )
+        centerPoint.set(pxCanvasCenter + pxCanvasPadding, pxCanvasCenter + pxCanvasPadding)
         inclineRect.set(
             pxCanvasPadding + strokePaint.strokeWidth,
             pxCanvasPadding + strokePaint.strokeWidth,
@@ -128,17 +159,13 @@ class InclinePlatformView @JvmOverloads constructor(
             pxCanvasHeight - pxCanvasRadius * 0.5F - pxCanvasPadding * 0.5F
         )
 
-        iconBitmap = createBitmap(
-            iconRes,
-            pxBitmapSize,
-            pxBitmapSize,
-            if (isNightMode) Color.GRAY else Color.BLACK
-        )
-        bitmapMatrix.setTranslate(
-            pxCanvasCenter - iconBitmap.width * 0.5F + pxCanvasPadding,
-            pxCanvasCenter - iconBitmap.height + pxCanvasPadding
-        )
-
+        iconBitmap = createBitmap()
+        iconBitmap?.let {
+            bitmapMatrix.setTranslate(
+                pxCanvasCenter - it.width * 0.5F + pxCanvasPadding,
+                pxCanvasCenter - it.height + pxCanvasPadding
+            )
+        }
         setMeasuredDimension(pxCanvasWidth, pxCanvasHeight)
     }
 
@@ -153,7 +180,7 @@ class InclinePlatformView @JvmOverloads constructor(
         }
     }
 
-    fun setIcon(iconRes: Int) = apply {
+    fun setIcon(@DrawableRes iconRes: Int) = apply {
         this.iconRes = iconRes
     }
 
@@ -199,50 +226,22 @@ class InclinePlatformView @JvmOverloads constructor(
     }
 
     private fun Canvas.drawBackground() {
-        drawCircle(
-            centerPoint.x,
-            centerPoint.y,
-            pxCanvasRadius,
-            backgroundPaint
-        )
-        drawArc(
-            inclineRect,
-            degree,
-            180F,
-            true,
-            inclineBackgroundPaint
-        )
+        drawCircle(centerPoint.x, centerPoint.y, pxCanvasRadius, backgroundPaint)
+        drawArc(inclineRect, degree, 180F, true, inclineBackgroundPaint)
     }
 
     private fun Canvas.drawStroke() {
 
         fun Canvas.drawSerif() {
             repeat(4) {
-                drawLine(
-                    serifRect.left,
-                    serifRect.top,
-                    serifRect.right,
-                    serifRect.bottom,
-                    serifPaint
-                )
+                drawLine(serifRect.left, serifRect.top, serifRect.right, serifRect.bottom, serifPaint)
                 rotate(5F, centerPoint.x, centerPoint.y)
             }
         }
 
-        drawLine(
-            lineLeftRect.left,
-            lineLeftRect.top,
-            lineLeftRect.right,
-            lineLeftRect.bottom,
-            centerSerifPaint
-        )
-        drawLine(
-            lineRightRect.left,
-            lineRightRect.top,
-            lineRightRect.right,
-            lineRightRect.bottom,
-            centerSerifPaint
-        )
+        drawLine(lineLeftRect.left, lineLeftRect.top, lineLeftRect.right, lineLeftRect.bottom, centerSerifPaint)
+        drawLine(lineRightRect.left, lineRightRect.top, lineRightRect.right, lineRightRect.bottom, centerSerifPaint)
+
         rotate(-20F, centerPoint.x, centerPoint.y)
         drawSerif()
         rotate(5F, centerPoint.x, centerPoint.y)
@@ -252,27 +251,16 @@ class InclinePlatformView @JvmOverloads constructor(
         rotate(5F, centerPoint.x, centerPoint.y)
         drawSerif()
         rotate(155F, centerPoint.x, centerPoint.y)
-        drawCircle(
-            centerPoint.x,
-            centerPoint.y,
-            pxCanvasRadius,
-            strokePaint
-        )
+        drawCircle(centerPoint.x, centerPoint.y, pxCanvasRadius, strokePaint)
     }
 
     private fun Canvas.drawData() {
-        drawText(
-            degreeText,
-            textPoint.x,
-            textPoint.y,
-            textPaint
-        )
+        drawText(degreeText, textPoint.x, textPoint.y, textPaint)
+
         rotate(degree, centerPoint.x, centerPoint.y)
-        drawBitmap(
-            iconBitmap,
-            bitmapMatrix,
-            bitmapPaint
-        )
+        iconBitmap?.let {
+            drawBitmap(it, bitmapMatrix, bitmapPaint)
+        }
     }
 
     private fun createPaint(colorString: String? = null): Paint =
@@ -282,19 +270,12 @@ class InclinePlatformView @JvmOverloads constructor(
             isFilterBitmap = true
         }
 
-    private fun createBitmap(
-        intRes: Int?,
-        width: Int,
-        height: Int,
-        @ColorInt
-        color: Int? = null
-    ): Bitmap {
-        return intRes?.let {
-            val drawable = ContextCompat.getDrawable(context, intRes)?.apply {
-                setTint(color ?: Color.BLACK)
-            }
-            drawable?.toBitmap(width, height)
-        } ?: Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    private fun createBitmap(@ColorInt color: Int? = null): Bitmap? {
+        if (pxBitmapSize == 0) return null
+        val drawable = ContextCompat.getDrawable(context, iconRes)?.apply {
+            setTint(color ?: Color.BLACK)
+        }
+        return drawable?.toBitmap(pxBitmapSize, pxBitmapSize)
     }
 
     @ColorInt

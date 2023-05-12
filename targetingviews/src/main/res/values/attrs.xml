@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="gradient_mode" format="enum">
+        <enum name="front" value="0" />
+        <enum name="side" value="1" />
+    </attr>
+
+    <attr name="scale_mode" format="enum">
+        <enum name="none" value="0" />
+        <enum name="linear" value="1" />
+        <enum name="logarithmic" value="2" />
+    </attr>
+
+    <attr name="inverted" format="boolean" />
+
+    <attr name="icon" format="reference" />
+
+    <attr name="angle" format="float" />
+
+    <declare-styleable name="InclinePlatformView">
+        <attr name="gradient_mode" />
+        <attr name="scale_mode" />
+        <attr name="inverted" />
+        <attr name="icon" />
+        <attr name="angle" />
+    </declare-styleable>
+
+</resources>

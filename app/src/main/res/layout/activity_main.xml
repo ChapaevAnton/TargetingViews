@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:platform="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +13,12 @@
     <com.dpt.inclineviews.InclinePlatformView
         android:id="@+id/incline_platform1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        platform:angle="2.1"
+        platform:gradient_mode="side"
+        platform:icon="@drawable/baseline_boat_24"
+        platform:inverted="true"
+        platform:scale_mode="linear" />
 
     <com.dpt.inclineviews.InclinePlatformView
         android:id="@+id/incline_platform2"
@@ -20,6 +27,11 @@
 
     <com.dpt.inclineviews.InclinePlatformView
         android:id="@+id/incline_platform3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.dpt.inclineviews.InclinePlatformView
+        android:id="@+id/incline_platform4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

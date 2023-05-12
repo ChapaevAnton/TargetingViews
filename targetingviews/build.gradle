@@ -43,7 +43,7 @@ afterEvaluate {
 
                 groupId = 'com.github.chapaevanton'
                 artifactId = 'targetingviews'
-                version = 'v0.6.1-alpha'
+                version = 'v0.6.3-alpha'
             }
         }
     }
