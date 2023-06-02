@@ -1,38 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:platform="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <com.dpt.inclineviews.InclinePlatformView
         android:id="@+id/incline_platform1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         platform:angle="2.1"
         platform:gradient_mode="side"
         platform:icon="@drawable/baseline_boat_24"
         platform:inverted="true"
         platform:scale_mode="linear" />
 
-    <com.dpt.inclineviews.InclinePlatformView
-        android:id="@+id/incline_platform2"
+    <com.dpt.inclineviews.TargetingView
+        android:id="@+id/targeting_view1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/incline_platform1"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.dpt.inclineviews.InclinePlatformView
-        android:id="@+id/incline_platform3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <com.dpt.inclineviews.InclinePlatformView
-        android:id="@+id/incline_platform4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

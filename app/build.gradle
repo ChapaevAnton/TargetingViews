@@ -43,4 +43,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation project(path: ':targetingviews')
+
+    //implementation 'com.github.ChapaevAnton:TargetingViews:v0.6.3-alpha'
 }

@@ -63,7 +63,7 @@ class InclinePlatformView @JvmOverloads constructor(
     private var bitmapMatrix = Matrix()
 
     @DrawableRes
-    private var iconRes: Int = R.drawable.base_icon
+    private var iconRes: Int = R.drawable.ic_view_incline_platform
     private var gradientMode = GradientMode.FRONT
     private var scaleMode = ScaleMode.NONE
     private var iconBitmap: Bitmap? = null
@@ -90,7 +90,7 @@ class InclinePlatformView @JvmOverloads constructor(
 
                 val iconRes = attrArray.getResourceId(
                     R.styleable.InclinePlatformView_icon,
-                    R.drawable.base_icon
+                    R.drawable.ic_view_incline_platform
                 )
 
                 val degree = attrArray.getFloat(R.styleable.InclinePlatformView_angle, 0F).toDouble()
